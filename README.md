@@ -73,7 +73,7 @@ Data sources and grounding:
 Testing instructions:
 
 1. Open `https://conecta-sofia-call-startup-challenge-34813533134.us-east1.run.app/`.
-2. Trigger the real Sofia flow.
+2. Call Sofia at `(619) 826-8955` or trigger the real Sofia flow from another channel.
 3. Click `Start Watching Logs`.
 4. Confirm real log cards appear with received time, product label, source, and summary.
 5. Click `Stop Watching Logs` to stop polling without clearing visible evidence.

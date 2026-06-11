@@ -139,7 +139,24 @@
       box-shadow: 0 6px 16px rgba(22, 34, 51, 0.05);
     }
 
-    .timer-label {
+    .demo-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .call-box {
+      min-width: 250px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: 0 6px 16px rgba(22, 34, 51, 0.05);
+    }
+
+    .timer-label,
+    .call-label {
       color: var(--muted);
       font-size: 12px;
       font-weight: 800;
@@ -153,6 +170,22 @@
       line-height: 1.15;
       font-weight: 900;
       font-variant-numeric: tabular-nums;
+    }
+
+    .call-number {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--ink);
+      font-size: 24px;
+      line-height: 1.15;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      text-decoration: none;
+    }
+
+    .call-number:hover {
+      color: var(--blue);
     }
 
     .layout {
@@ -707,9 +740,15 @@
           Clear Logs
         </button>
       </div>
-      <div class="timer-box" aria-label="Elapsed log watch time">
-        <div class="timer-label">Timer</div>
-        <div class="demo-clock" id="demoClock">00:00.0</div>
+      <div class="demo-meta">
+        <div class="call-box" aria-label="Sofia demo phone number">
+          <div class="call-label">Call Sofia</div>
+          <a class="call-number" href="tel:+16198268955">(619) 826-8955</a>
+        </div>
+        <div class="timer-box" aria-label="Elapsed log watch time">
+          <div class="timer-label">Timer</div>
+          <div class="demo-clock" id="demoClock">00:00.0</div>
+        </div>
       </div>
     </section>
 
