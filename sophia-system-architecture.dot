@@ -1,0 +1,371 @@
+digraph SophiaSystemArchitecture {
+  graph [
+    label="Sophia System Architecture",
+    labelloc=t,
+    fontsize=24,
+    fontname="Inter, Arial, sans-serif",
+    rankdir=LR,
+    compound=true,
+    splines=ortho,
+    nodesep=0.55,
+    ranksep=1.0,
+    bgcolor="#ffffff",
+    pad=0.4
+  ];
+
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="Inter, Arial, sans-serif",
+    fontsize=10,
+    color="#667085",
+    penwidth=1.2,
+    fillcolor="#ffffff",
+    margin="0.09,0.06"
+  ];
+
+  edge [
+    fontname="Inter, Arial, sans-serif",
+    fontsize=9,
+    color="#475467",
+    arrowsize=0.7,
+    penwidth=1.1
+  ];
+
+  subgraph cluster_frontend {
+    label="Frontend";
+    color="#2563eb";
+    fillcolor="#eff6ff";
+    style="rounded,filled";
+    fontcolor="#1d4ed8";
+
+    MainLayout [label="MainLayout.vue\nui/app/src/layouts/MainLayout.vue"];
+    SofiaSupportModal [label="SofiaSupportModal.vue\nui/app/src/components/shared/SofiaSupportModal.vue"];
+    SofiaModalParts [label="Sofia modal parts\nui/app/src/components/shared/sofia/*"];
+    UseSofiaSupportChat [label="useSofiaSupportChat.ts\nui/app/src/composables/sofia/useSofiaSupportChat.ts"];
+    SofiaSettingsSection [label="SofiaSettingsSection.vue\nui/app/src/components/settings/SofiaSettingsSection.vue"];
+    SofiaSettingsClient [label="sofiaSettings.service.ts\nui/app/src/services/sofiaSettings.service.ts"];
+    PhoneLiveCallPanel [label="PhoneLiveCallPanel.vue\nui/app/src/components/phone/PhoneLiveCallPanel.vue"];
+    PhoneLiveRealtime [label="usePhoneLiveCallsFirestoreRealtime.ts\nui/app/src/composables/phone/usePhoneLiveCallsFirestoreRealtime.ts"];
+    IncomingTransferUI [label="useIncomingPhoneTransfers.impl.ts\nui/app/src/composables/phone/useIncomingPhoneTransfers.impl.ts"];
+  }
+
+  subgraph cluster_entrypoints {
+    label="Backend entrypoints";
+    color="#0f766e";
+    fillcolor="#ecfdf5";
+    style="rounded,filled";
+    fontcolor="#115e59";
+
+    Server [label="Express server\nproxy/server.ts"];
+    WebsocketSetup [label="WebSocket upgrade router\nproxy/websockets/index.ts"];
+    SofiaApi [label="/api/sofia\nchat, feedback, voice debug"];
+    SofiaToolsApi [label="/api/sofia/tools\ninternal Sofia tool routes"];
+    WebsiteChatApi [label="/api/website-chat\npublic website chat"];
+    SettingsApi [label="/api/settings/sofia/knowledge"];
+    AdminSofiaApi [label="/api/admin/sofia\nmode settings"];
+    AgentApi [label="/api/agent\nmachine-key diagnostics"];
+    InfobipVoiceEvents [label="/webhooks/infobip/voice/events"];
+    InfobipVoiceStream [label="/webhooks/infobip/voice/stream"];
+    McpApi [label="/mcp\nMCP HTTP/SSE"];
+    McpWellKnown [label="/.well-known/mcp\nproxy/routes/mcpWellKnown.ts"];
+  }
+
+  subgraph cluster_controllers {
+    label="Controllers / routes";
+    color="#475467";
+    fillcolor="#f9fafb";
+    style="rounded,filled";
+    fontcolor="#344054";
+
+    SofiaController [label="Sofia controller\nproxy/controllers/sofiaController.ts"];
+    WebsiteChatController [label="Website chat controller\nproxy/controllers/websiteChatController.ts"];
+    SofiaSettingsController [label="Sofia settings controller\nproxy/controllers/settings/sofiaSettingsController.ts"];
+    SofiaModeSettingsController [label="Sofia mode settings controller\nproxy/controllers/sofiaModeSettingsController.ts"];
+    InfobipVoiceGatewayController [label="Infobip voice gateway controller\nproxy/controllers/infobipVoiceGatewayController.ts"];
+    SofiaToolRoutes [label="Sofia tool routes\nproxy/sofia/tools/sofiaToolRoutes.ts"];
+    AgentRoutes [label="Agent routes\nproxy/routes/agent.ts"];
+    McpRoutes [label="MCP routes\nproxy/routes/mcp.ts"];
+    McpHttpWrapper [label="MCP HTTP wrapper\nproxy/mcp/mcpHttpWrapper.js"];
+    MasterTransportMcp [label="Master transport MCP\nproxy/mcp/masterTransportMcpHttp.js"];
+    McpServer [label="MCP server\nproxy/mcp/mcpServer.js"];
+  }
+
+  subgraph cluster_internal_chat {
+    label="Internal Sofia chat";
+    color="#c2410c";
+    fillcolor="#fff7ed";
+    style="rounded,filled";
+    fontcolor="#9a3412";
+
+    SofiaService [label="Sofia service\nproxy/sofia/services/sofiaService.impl.ts"];
+    InstructionActionService [label="Instruction action service\nproxy/sofia/services/sofiaInstructionActionService.ts"];
+    SofiaCore [label="Sofia core context/policy/adapters\nproxy/sofia/services/core/*"];
+    SofiaWorkflow [label="Workflow audit, memory, persona, composer\nproxy/sofia/services/workflow/*"];
+    HelpDeskSearch [label="searchInternalHelpDesk\nproxy/models/sofiaModel.ts"];
+    VertexRag [label="Vertex RAG service\nproxy/services/ai/vertexRagService.ts"];
+    AiGateway [label="AI gateway\nproxy/services/ai/aiGatewayService.ts"];
+    GeminiText [label="Gemini text models\nvia aiGatewayService"];
+  }
+
+  subgraph cluster_website_chat {
+    label="Website Sofia chat";
+    color="#0891b2";
+    fillcolor="#ecfeff";
+    style="rounded,filled";
+    fontcolor="#0e7490";
+
+    WebsiteChatService [label="Website chat service\nproxy/sofia/services/websiteChatService.ts"];
+    WebsiteChatPipeline [label="Website chat Sofia pipeline\nproxy/sofia/services/websiteChatSofiaPipeline.ts"];
+    PublicHelpDeskSearch [label="searchPublicHelpDesk\nproxy/models/sofiaModel.ts"];
+  }
+
+  subgraph cluster_voice_runtime {
+    label="Voice runtime";
+    color="#be123c";
+    fillcolor="#fff1f2";
+    style="rounded,filled";
+    fontcolor="#9f1239";
+
+    VoiceWebhookService [label="Infobip voice webhook service\nproxy/services/voice/infobipVoiceWebhookService.ts"];
+    RouteLookup [label="Voice route lookup\nproxy/services/voice/webhook/routeLookup.ts"];
+    CallLogStartup [label="Inbound call log startup\nproxy/services/voice/webhook/callLogStartup.ts"];
+    ConferenceStartup [label="Infobip conference startup\nproxy/services/voice/webhook/conferenceStartup.ts"];
+    MediaWebSocketService [label="Infobip media WebSocket service\nproxy/services/voice/infobipMediaWebSocketService.impl.ts"];
+    VoiceSessionManager [label="Voice session manager\nproxy/services/voice/voiceSessionManager.ts"];
+    GeminiLiveBridge [label="Sofia Gemini Live bridge\nproxy/services/voice/sofiaGeminiLiveBridge.ts"];
+    GeminiSetup [label="Gemini setup payload builder\nproxy/services/voice/infobipMediaWebSocketGemini.ts"];
+    GeminiLiveConfig [label="Gemini Live config and guardrails\nproxy/services/voice/geminiLive/config.ts"];
+    ReceptionistGeminiTools [label="Receptionist Gemini Live tools\nproxy/services/voice/geminiLive/tools/receptionistTools.ts"];
+    MediaSocketModules [label="Media socket modules\nproxy/services/voice/mediaSocket/*"];
+    VoiceToolDispatcher [label="Voice tool dispatcher registry\nproxy/services/voice/tools/dispatcher/registry.ts"];
+    VoiceToolRunner [label="Tool runner and ADK bridge log\nproxy/services/voice/tools/dispatcher/toolRunner.ts"];
+    ReceptionistRegistry [label="Receptionist tool registry\nproxy/services/voice/tools/dispatcher/receptionistRegistry.ts"];
+    BookingTools [label="Booking voice tools\nproxy/services/voice/tools/booking/*"];
+    IdentityTools [label="Identity voice tools\nproxy/services/voice/tools/identity/*"];
+    ReceptionistTools [label="Receptionist voice tools\nproxy/services/voice/tools/receptionist/*"];
+    SendSmsTool [label="send_sms handler\nproxy/services/voice/tools/receptionist/sendSms.ts"];
+    NotificationHubSms [label="sendSmsNotification\nproxy/services/notifications/notificationHub.ts"];
+    TransferTools [label="Transfer voice tools\nproxy/services/voice/tools/transfer/*"];
+    VoiceContext [label="Sofia voice context/runtime\nproxy/sofia/voice/*"];
+    VoiceBookingService [label="Sofia voice booking service\nproxy/sofia/services/sofiaVoiceBookingService.impl.ts"];
+    VoiceConversationLogger [label="Voice conversation logger\nproxy/sofia/voice/sofiaVoiceConversationLogger.ts"];
+    VoiceObservability [label="Voice observability payload service\nproxy/services/voice/sofiaVoiceObservabilityPayloadService.ts"];
+    PhoneFinalizer [label="Sofia phone call finalizer\nproxy/services/phone/sofiaPhoneCallFinalizerService.ts"];
+    PhoneTransferWorkflow [label="Sofia transfer lookup workflow\nproxy/services/phone/phoneTransferSofiaLookupWorkflow.ts"];
+    PhoneVoicemailWorkflow [label="Transfer voicemail workflow\nproxy/services/phone/phoneTransferVoicemailWorkflow.ts"];
+    PhoneLiveState [label="Phone live state service\nproxy/services/phone/phoneLiveStateService.ts"];
+  }
+
+  subgraph cluster_agents_adk_mcp {
+    label="Agents / ADK / MCP tools";
+    color="#4f46e5";
+    fillcolor="#eef2ff";
+    style="rounded,filled";
+    fontcolor="#3730a3";
+
+    DomainAgents [label="Sofia domain agent registry\nproxy/sofia/agents/index.ts"];
+    IdentityAgent [label="Identity agent\nproxy/sofia/agents/identity/agent.ts"];
+    AppointmentsAgent [label="Appointments agent\nproxy/sofia/agents/appointments/agent.ts"];
+    ProfileAgent [label="Profile agent\nproxy/sofia/agents/profile/agent.ts"];
+    DocumentsAgent [label="Documents agent\nproxy/sofia/agents/documents/agent.ts"];
+    SignaturesAgent [label="Signatures agent\nproxy/sofia/agents/signatures/agent.ts"];
+    TasksAgent [label="Tasks agent\nproxy/sofia/agents/tasks/agent.ts"];
+    HandoffAgent [label="Handoff agent\nproxy/sofia/agents/handoff/agent.ts"];
+    SofiaMcpTools [label="Domain MCP tool declarations\nproxy/sofia/mcp/*/tools.ts"];
+    SophiaAdk [label="Sophia ADK orchestration\nproxy/sofia/adk/orchestrationService.ts"];
+    SophiaAdkTools [label="Sophia ADK canonical tools\nproxy/sofia/adk/tools.ts"];
+    SophiaAdkToolBridge [label="Sophia ADK tool bridge\nproxy/sofia/adk/toolBridge.ts"];
+    GoogleMapsGroundingTool [label="GoogleMapsGroundingTool\nproxy/sofia/adk/tools.ts"];
+    GoogleAdkFunctionTool [label="@google/adk FunctionTool\npackage dependency"];
+  }
+
+  subgraph cluster_settings {
+    label="Settings / knowledge";
+    color="#ca8a04";
+    fillcolor="#fefce8";
+    style="rounded,filled";
+    fontcolor="#854d0e";
+
+    SofiaSettingsService [label="Sofia settings service\nproxy/services/settings/sofiaSettingsService.ts"];
+    SofiaKnowledgeModel [label="Sofia knowledge items model\nproxy/models/sofiaKnowledgeItemsModel.ts"];
+    SofiaModeSettingsModel [label="Sofia mode settings model\nproxy/models/sofiaModeSettingsModel.ts"];
+    SofiaVoiceNumbersModel [label="Sofia voice numbers model\nproxy/models/sofiaVoiceNumbersModel.ts"];
+  }
+
+  subgraph cluster_persistence {
+    label="Persistence / realtime";
+    color="#15803d";
+    fillcolor="#f0fdf4";
+    style="rounded,filled";
+    fontcolor="#166534";
+
+    Neon [label="Neon SQL client\nproxy/db/neon.js"];
+    SofiaModel [label="Sofia model\nproxy/models/sofiaModel.ts"];
+    SofiaInteractionEventsModel [label="Interaction events model\nproxy/models/sofiaInteractionEventsModel.ts"];
+    SofiaMemoryEntriesModel [label="Memory entries model\nproxy/models/sofiaMemoryEntriesModel.ts"];
+    SofiaSessionTracesModel [label="Session traces model\nproxy/models/sofiaSessionTracesModel.ts"];
+    SofiaVoiceBookingModel [label="Voice booking model\nproxy/models/sofiaVoiceBookingModel.ts"];
+    SofiaVoiceConversationTurnsModel [label="Voice conversation turns model\nproxy/models/sofiaVoiceConversationTurnsModel.ts"];
+    Firestore [label="Firebase Admin Firestore\nfirebase-admin/firestore"];
+    VokerObservability [label="Voker observability service\nproxy/services/observability/vokerObservabilityService.ts"];
+  }
+
+  subgraph cluster_external {
+    label="External integrations";
+    color="#9333ea";
+    fillcolor="#faf5ff";
+    style="rounded,filled";
+    fontcolor="#6b21a8";
+
+    Infobip [label="Infobip Voice\nwebhooks, calls API, media WebSocket"];
+    InfobipSms [label="Infobip SMS\nvia notificationHub"];
+    GeminiLive [label="Gemini Live WebSocket API"];
+    GoogleMapsMcp [label="Google Maps MCP endpoint\nhttps://mapstools.googleapis.com/mcp"];
+  }
+
+  MainLayout -> SofiaSupportModal;
+  SofiaSupportModal -> SofiaModalParts;
+  SofiaSupportModal -> UseSofiaSupportChat;
+  UseSofiaSupportChat -> SofiaApi [label="POST /chat, /feedback"];
+  UseSofiaSupportChat -> SofiaController;
+  SofiaSettingsSection -> SofiaSettingsClient;
+  SofiaSettingsClient -> SettingsApi;
+  PhoneLiveCallPanel -> PhoneLiveRealtime;
+  PhoneLiveRealtime -> Firestore;
+  IncomingTransferUI -> PhoneTransferWorkflow;
+
+  Server -> SofiaApi;
+  Server -> SofiaToolsApi;
+  Server -> WebsiteChatApi;
+  Server -> SettingsApi;
+  Server -> AdminSofiaApi;
+  Server -> AgentApi;
+  Server -> InfobipVoiceEvents;
+  Server -> McpApi;
+  Server -> McpWellKnown;
+  Server -> WebsocketSetup;
+  WebsocketSetup -> InfobipVoiceStream;
+
+  SofiaApi -> SofiaController;
+  SofiaController -> InstructionActionService;
+  SofiaController -> SofiaService;
+  SofiaController -> SofiaCore;
+  SofiaController -> SofiaModel;
+
+  SofiaService -> SofiaCore;
+  SofiaService -> SofiaWorkflow;
+  SofiaService -> HelpDeskSearch;
+  HelpDeskSearch -> VertexRag;
+  SofiaService -> AiGateway;
+  AiGateway -> GeminiText;
+  SofiaService -> SofiaModel;
+  SofiaService -> SofiaMemoryEntriesModel;
+  SofiaService -> SofiaSessionTracesModel;
+  SofiaService -> VokerObservability;
+
+  WebsiteChatApi -> WebsiteChatController;
+  WebsiteChatController -> WebsiteChatService;
+  WebsiteChatService -> WebsiteChatPipeline;
+  WebsiteChatPipeline -> PublicHelpDeskSearch;
+  PublicHelpDeskSearch -> VertexRag;
+  WebsiteChatPipeline -> AiGateway;
+  WebsiteChatPipeline -> VokerObservability;
+
+  SettingsApi -> SofiaSettingsController;
+  SofiaSettingsController -> SofiaSettingsService;
+  SofiaSettingsService -> SofiaKnowledgeModel;
+  SofiaSettingsService -> SofiaVoiceNumbersModel;
+  AdminSofiaApi -> SofiaModeSettingsController;
+  SofiaModeSettingsController -> SofiaModeSettingsModel;
+
+  McpWellKnown -> McpApi;
+  McpApi -> McpRoutes;
+  McpRoutes -> McpHttpWrapper;
+  McpRoutes -> MasterTransportMcp;
+  McpHttpWrapper -> McpServer;
+
+  Infobip -> InfobipVoiceEvents;
+  InfobipVoiceEvents -> InfobipVoiceGatewayController;
+  InfobipVoiceGatewayController -> VoiceWebhookService;
+  VoiceWebhookService -> RouteLookup;
+  VoiceWebhookService -> CallLogStartup;
+  VoiceWebhookService -> ConferenceStartup;
+  VoiceWebhookService -> VokerObservability;
+  ConferenceStartup -> Infobip;
+  Infobip -> InfobipVoiceStream;
+  InfobipVoiceStream -> MediaWebSocketService;
+
+  MediaWebSocketService -> VoiceSessionManager;
+  MediaWebSocketService -> MediaSocketModules;
+  MediaWebSocketService -> GeminiLiveBridge;
+  MediaWebSocketService -> GeminiSetup;
+  GeminiSetup -> GeminiLiveConfig;
+  GeminiLiveConfig -> ReceptionistGeminiTools;
+  GeminiSetup -> DomainAgents;
+  GeminiLiveBridge -> GeminiLive;
+  MediaSocketModules -> VoiceToolDispatcher;
+  VoiceToolDispatcher -> VoiceToolRunner;
+  VoiceToolRunner -> SophiaAdkToolBridge;
+  VoiceToolDispatcher -> ReceptionistRegistry;
+  VoiceToolDispatcher -> BookingTools;
+  VoiceToolDispatcher -> IdentityTools;
+  VoiceToolDispatcher -> ReceptionistTools;
+  VoiceToolDispatcher -> TransferTools;
+  BookingTools -> VoiceBookingService;
+  IdentityTools -> VoiceContext;
+  ReceptionistTools -> VoiceContext;
+  ReceptionistRegistry -> SendSmsTool [label="send_sms"];
+  ReceptionistGeminiTools -> SendSmsTool [label="Gemini Live declaration"];
+  SendSmsTool -> NotificationHubSms [label="confirmed SMS send"];
+  NotificationHubSms -> InfobipSms;
+  TransferTools -> PhoneTransferWorkflow;
+  TransferTools -> PhoneVoicemailWorkflow;
+  MediaWebSocketService -> VoiceConversationLogger;
+  VoiceConversationLogger -> SofiaVoiceConversationTurnsModel;
+  MediaWebSocketService -> VoiceObservability;
+  VoiceObservability -> VokerObservability;
+  MediaWebSocketService -> PhoneLiveState;
+  PhoneLiveState -> Firestore;
+  MediaWebSocketService -> PhoneFinalizer;
+  PhoneFinalizer -> SophiaAdk;
+
+  DomainAgents -> IdentityAgent;
+  DomainAgents -> AppointmentsAgent;
+  DomainAgents -> ProfileAgent;
+  DomainAgents -> DocumentsAgent;
+  DomainAgents -> SignaturesAgent;
+  DomainAgents -> TasksAgent;
+  DomainAgents -> HandoffAgent;
+  IdentityAgent -> SofiaMcpTools;
+  AppointmentsAgent -> SofiaMcpTools;
+  ProfileAgent -> SofiaMcpTools;
+  DocumentsAgent -> SofiaMcpTools;
+  SignaturesAgent -> SofiaMcpTools;
+  TasksAgent -> SofiaMcpTools;
+  HandoffAgent -> SofiaMcpTools;
+  SophiaAdk -> SophiaAdkTools;
+  SophiaAdkTools -> GoogleMapsGroundingTool;
+  SophiaAdkTools -> GoogleAdkFunctionTool;
+  GoogleMapsGroundingTool -> SofiaSettingsService;
+  GoogleMapsGroundingTool -> GoogleMapsMcp;
+
+  SofiaToolsApi -> SofiaToolRoutes;
+  SofiaToolRoutes -> BookingTools;
+  SofiaToolRoutes -> IdentityTools;
+  SofiaToolRoutes -> ReceptionistTools;
+  SofiaToolRoutes -> TransferTools;
+
+  AgentApi -> AgentRoutes;
+  AgentRoutes -> Neon;
+
+  SofiaModel -> Neon;
+  SofiaInteractionEventsModel -> Neon;
+  SofiaMemoryEntriesModel -> Neon;
+  SofiaSessionTracesModel -> Neon;
+  SofiaVoiceBookingModel -> Neon;
+  SofiaVoiceConversationTurnsModel -> Neon;
+  SofiaKnowledgeModel -> Neon;
+  SofiaModeSettingsModel -> Neon;
+  SofiaVoiceNumbersModel -> Neon;
+}

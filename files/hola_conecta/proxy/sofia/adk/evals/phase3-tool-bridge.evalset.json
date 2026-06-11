@@ -1,0 +1,62 @@
+{
+  "name": "sophia-adk-phase-3-tool-bridge",
+  "description": "Deterministic eval fixtures for Sophia ADK tool-bridge trajectories on real Gemini Live tool names.",
+  "cases": [
+    {
+      "id": "business_info_routes_to_office_knowledge",
+      "geminiToolName": "lookup_business_info",
+      "canonicalTool": "getBusinessKnowledge",
+      "expectedAgent": "OfficeKnowledgeAgent",
+      "expectedHandler": "receptionist/businessInfo.handleLookupBusinessInfoTool",
+      "expectedTraceAgents": ["SophiaOrchestratorAgent", "OfficeKnowledgeAgent"]
+    },
+    {
+      "id": "map_link_routes_to_google_maps_grounding",
+      "geminiToolName": "lookup_business_info",
+      "canonicalTool": "GoogleMapsGroundingTool",
+      "expectedAgent": "OfficeKnowledgeAgent",
+      "expectedHandler": "receptionist/businessInfo.handleLookupBusinessInfoTool",
+      "expectedTraceAgents": ["SophiaOrchestratorAgent", "OfficeKnowledgeAgent"]
+    },
+    {
+      "id": "document_status_routes_to_compliance_safety",
+      "geminiToolName": "list_caller_documents",
+      "canonicalTool": "getDocumentStatus",
+      "expectedAgent": "ComplianceSafetyAgent",
+      "expectedHandler": "receptionist/documents.handleListCallerDocumentsTool",
+      "expectedTraceAgents": ["SophiaOrchestratorAgent", "ComplianceSafetyAgent"]
+    },
+    {
+      "id": "signature_status_routes_to_compliance_safety",
+      "geminiToolName": "list_pending_signatures",
+      "canonicalTool": "getSignatureStatus",
+      "expectedAgent": "ComplianceSafetyAgent",
+      "expectedHandler": "receptionist/signatures.handleListPendingSignaturesTool",
+      "expectedTraceAgents": ["SophiaOrchestratorAgent", "ComplianceSafetyAgent"]
+    },
+    {
+      "id": "staff_transfer_routes_to_routing_escalation",
+      "geminiToolName": "prepare_user_transfer",
+      "canonicalTool": "prepareUserTransfer",
+      "expectedAgent": "RoutingEscalationAgent",
+      "expectedHandler": "transfer/prepareUserTransfer.handlePrepareUserTransferTool",
+      "expectedTraceAgents": ["SophiaOrchestratorAgent", "RoutingEscalationAgent"]
+    },
+    {
+      "id": "callback_routes_to_follow_up_action",
+      "geminiToolName": "create_callback_task",
+      "canonicalTool": "createCallbackFollowUp",
+      "expectedAgent": "FollowUpActionAgent",
+      "expectedHandler": "receptionist/callbackTask.handleCreateCallbackTaskTool",
+      "expectedTraceAgents": ["SophiaOrchestratorAgent", "FollowUpActionAgent"]
+    },
+    {
+      "id": "booking_create_routes_to_routing_escalation",
+      "geminiToolName": "create_booking",
+      "canonicalTool": "createBooking",
+      "expectedAgent": "RoutingEscalationAgent",
+      "expectedHandler": "booking/createBooking.handleCreateBookingTool",
+      "expectedTraceAgents": ["SophiaOrchestratorAgent", "RoutingEscalationAgent"]
+    }
+  ]
+}

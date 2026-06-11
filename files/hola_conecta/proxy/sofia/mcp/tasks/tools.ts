@@ -1,0 +1,6 @@
+import { allSofiaLiveVoiceTools } from '../../../services/voice/infobipMediaWebSocketGeminiTools.ts';
+import type { GeminiFunctionDeclaration } from '../../../services/voice/infobipMediaWebSocketGeminiTypes.ts';
+
+export function tasksTools(): GeminiFunctionDeclaration[] {
+  return allSofiaLiveVoiceTools();
+}

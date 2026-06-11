@@ -1,0 +1,1006 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Conecta Sofia Call Startup Challenge</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --panel: #ffffff;
+      --panel-soft: #f9fbfd;
+      --ink: #172033;
+      --muted: #5d687a;
+      --line: #dce3ee;
+      --blue: #1a73e8;
+      --green: #188038;
+      --yellow: #f9ab00;
+      --red: #d93025;
+      --teal: #00796b;
+      --navy: #243b64;
+      --shadow: 0 18px 45px rgba(22, 34, 51, 0.08);
+      --radius: 8px;
+      color-scheme: light;
+      font-family: Aptos, "Segoe UI", Helvetica, Arial, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .page {
+      width: min(1760px, calc(100vw - 48px));
+      margin: 0 auto;
+      padding: 28px 0 34px;
+    }
+
+    .hero {
+      display: block;
+      padding: 24px 28px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+
+    h1 {
+      margin: 0;
+      color: var(--ink);
+      font-size: clamp(34px, 3vw, 56px);
+      line-height: 1.02;
+      letter-spacing: 0;
+      font-weight: 820;
+    }
+
+    .subtitle {
+      margin: 12px 0 0;
+      max-width: 920px;
+      color: var(--muted);
+      font-size: clamp(18px, 1.2vw, 23px);
+      line-height: 1.45;
+      font-weight: 500;
+    }
+
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: space-between;
+      align-items: center;
+      margin: 20px 0;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .button {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      color: var(--ink);
+      min-height: 46px;
+      padding: 0 16px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      font-weight: 800;
+      box-shadow: 0 6px 16px rgba(22, 34, 51, 0.06);
+      transition: transform 140ms ease, box-shadow 140ms ease, border-color 140ms ease;
+    }
+
+    .button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 10px 22px rgba(22, 34, 51, 0.1);
+      border-color: #c4cfdd;
+    }
+
+    .button:disabled {
+      cursor: not-allowed;
+      opacity: 0.62;
+      transform: none;
+    }
+
+    .button.primary {
+      background: var(--blue);
+      color: #ffffff;
+      border-color: var(--blue);
+    }
+
+    .icon {
+      width: 18px;
+      height: 18px;
+      display: inline-block;
+      flex: 0 0 auto;
+    }
+
+    .timer-box {
+      min-width: 156px;
+      padding: 8px 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      text-align: right;
+      box-shadow: 0 6px 16px rgba(22, 34, 51, 0.05);
+    }
+
+    .timer-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0;
+      text-transform: uppercase;
+    }
+
+    .demo-clock {
+      color: var(--ink);
+      font-size: 24px;
+      line-height: 1.15;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      min-height: 680px;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      padding: 22px 24px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel-soft);
+    }
+
+    .panel-title {
+      margin: 0;
+      font-size: 25px;
+      line-height: 1.1;
+      letter-spacing: 0;
+      font-weight: 820;
+    }
+
+    .panel-subtitle {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 600;
+    }
+
+    .conversation-body {
+      display: grid;
+      gap: 20px;
+      padding: 24px;
+    }
+
+    .call-strip {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 14px;
+      align-items: center;
+      padding: 15px 16px;
+      border: 1px solid #d2e3fc;
+      border-radius: var(--radius);
+      background: #f6f9ff;
+    }
+
+    .call-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: var(--blue);
+      color: #fff;
+    }
+
+    .call-label {
+      font-size: 17px;
+      font-weight: 820;
+    }
+
+    .call-detail {
+      color: var(--muted);
+      font-size: 14px;
+      margin-top: 2px;
+      font-weight: 600;
+    }
+
+    .call-timer {
+      color: var(--green);
+      font-weight: 820;
+      font-variant-numeric: tabular-nums;
+      font-size: 18px;
+    }
+
+    .message {
+      display: grid;
+      gap: 10px;
+      max-width: 90%;
+      opacity: 0;
+      transform: translateY(12px);
+      transition: opacity 320ms ease, transform 320ms ease;
+    }
+
+    .message.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .message.user {
+      justify-self: start;
+    }
+
+    .message.assistant {
+      justify-self: end;
+    }
+
+    .message-meta {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .avatar {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .avatar.client {
+      background: var(--navy);
+    }
+
+    .avatar.conecta {
+      background: var(--green);
+    }
+
+    .bubble {
+      padding: 18px 19px;
+      border-radius: var(--radius);
+      border: 1px solid var(--line);
+      font-size: clamp(20px, 1.35vw, 26px);
+      line-height: 1.38;
+      box-shadow: 0 10px 24px rgba(22, 34, 51, 0.06);
+    }
+
+    .user .bubble {
+      background: #ffffff;
+      border-color: #cdd7e5;
+    }
+
+    .assistant .bubble {
+      background: #f2fbf5;
+      border-color: #cfe3d7;
+    }
+
+    .typing {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 34px;
+    }
+
+    .typing span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      animation: blink 900ms ease-in-out infinite;
+    }
+
+    .typing span:nth-child(2) {
+      animation-delay: 140ms;
+    }
+
+    .typing span:nth-child(3) {
+      animation-delay: 280ms;
+    }
+
+    @keyframes blink {
+      0%, 100% { opacity: 0.28; transform: translateY(0); }
+      50% { opacity: 1; transform: translateY(-3px); }
+    }
+
+    .response-highlight {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      margin-top: 4px;
+    }
+
+    .mini-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 13px;
+      background: var(--panel-soft);
+    }
+
+    .mini-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      margin-bottom: 5px;
+    }
+
+    .mini-value {
+      font-size: 16px;
+      font-weight: 820;
+    }
+
+    .activity-body {
+      padding: 18px 22px 22px;
+    }
+
+    .activity-feed {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .activity-item {
+      position: relative;
+      display: grid;
+      grid-template-columns: 74px 1fr auto;
+      gap: 13px;
+      align-items: start;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #ffffff;
+      opacity: 0.48;
+      transform: translateY(4px);
+      transition: opacity 260ms ease, transform 260ms ease, border-color 260ms ease, background 260ms ease;
+    }
+
+    .activity-item.running,
+    .activity-item.success {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .activity-item.running {
+      border-color: #b6cfff;
+      background: #f7faff;
+    }
+
+    .activity-item.success {
+      border-color: #cfe3d7;
+    }
+
+    .time {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 900;
+      font-variant-numeric: tabular-nums;
+      padding-top: 3px;
+    }
+
+    .activity-title {
+      margin: 0 0 6px;
+      font-size: 18px;
+      font-weight: 850;
+      letter-spacing: 0;
+    }
+
+    .activity-desc {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.35;
+      font-weight: 600;
+    }
+
+    .product-badge {
+      justify-self: end;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      min-width: max-content;
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--line);
+      background: var(--panel-soft);
+      color: var(--ink);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .product-badge::before {
+      content: "";
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    .product-badge.maps::before { background: var(--green); }
+    .product-badge.gemini::before { background: var(--yellow); }
+    .product-badge.cloud::before { background: var(--red); }
+    .product-badge.conecta::before { background: var(--teal); }
+
+    .state {
+      position: absolute;
+      right: 16px;
+      bottom: 14px;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .activity-item.running .state {
+      color: var(--blue);
+    }
+
+    .activity-item.success .state {
+      color: var(--green);
+    }
+
+    .activity-item.running .state::after {
+      content: "";
+      display: inline-block;
+      width: 8px;
+      height: 8px;
+      margin-left: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+      animation: pulse 1s ease-in-out infinite;
+    }
+
+    .proof-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .proof {
+      min-height: 86px;
+      padding: 13px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-soft);
+    }
+
+    .proof strong {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+
+    .proof span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.32;
+      font-weight: 600;
+    }
+
+    .copy-note {
+      min-height: 20px;
+      color: var(--green);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .log-source {
+      margin-bottom: 14px;
+      padding: 13px 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-soft);
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.38;
+      font-weight: 700;
+    }
+
+    .log-source strong {
+      color: var(--ink);
+    }
+
+    .log-feed {
+      display: grid;
+      gap: 10px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      max-height: 690px;
+      overflow: auto;
+    }
+
+    .log-item {
+      display: grid;
+      gap: 8px;
+      padding: 14px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: #ffffff;
+    }
+
+    .log-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0;
+    }
+
+    .log-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 8px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel-soft);
+      color: var(--ink);
+    }
+
+    .log-chip::before {
+      content: "";
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--blue);
+    }
+
+    .log-chip.sofia::before { background: var(--teal); }
+    .log-chip.adk::before { background: var(--blue); }
+    .log-chip.gemini::before { background: var(--yellow); }
+    .log-chip.maps::before { background: var(--green); }
+
+    .log-message {
+      color: var(--ink);
+      font-size: 15px;
+      line-height: 1.38;
+      font-weight: 650;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .empty-logs {
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel-soft);
+      color: var(--muted);
+      font-size: 16px;
+      font-weight: 750;
+    }
+
+    @media (max-width: 1120px) {
+      .page {
+        width: min(100vw - 28px, 980px);
+      }
+
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .panel {
+        min-height: auto;
+      }
+
+      .proof-strip,
+      .response-highlight {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 720px) {
+      .page {
+        width: min(100vw - 18px, 620px);
+        padding: 10px 0 20px;
+      }
+
+      .hero,
+      .panel-header,
+      .conversation-body,
+      .activity-body {
+        padding: 16px;
+      }
+
+      .toolbar {
+        align-items: stretch;
+      }
+
+      .buttons,
+      .button {
+        width: 100%;
+      }
+
+      .button {
+        justify-content: center;
+      }
+
+      .activity-item {
+        grid-template-columns: 1fr;
+      }
+
+      .product-badge {
+        justify-self: start;
+      }
+
+      .state {
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero" aria-labelledby="page-title">
+      <div>
+        <h1 id="page-title">Conecta Sofia Call Startup Challenge</h1>
+        <p class="subtitle">Bilingual tax-office assistant powered by ADK, Google Maps grounding, and Gemini.</p>
+      </div>
+    </section>
+
+    <section class="toolbar" aria-label="Demo controls">
+      <div class="buttons">
+        <button class="button primary" id="startWatch" type="button">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M8 5v14l11-7L8 5z" fill="currentColor"></path>
+          </svg>
+          Start Watching Logs
+        </button>
+        <button class="button" id="stopWatch" type="button" disabled>
+          <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <rect x="6" y="6" width="12" height="12" rx="2" fill="currentColor"></rect>
+          </svg>
+          Stop Watching Logs
+        </button>
+        <button class="button" id="clearLogs" type="button">
+          <svg class="icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <path d="M6 7h9a5 5 0 1 1-3.54 8.54" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path>
+            <path d="M6 7h5M6 7v5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
+          </svg>
+          Clear Logs
+        </button>
+      </div>
+      <div class="timer-box" aria-label="Elapsed log watch time">
+        <div class="timer-label">Timer</div>
+        <div class="demo-clock" id="demoClock">00:00.0</div>
+      </div>
+    </section>
+
+    <section class="layout">
+      <section class="panel" aria-labelledby="activity-title">
+        <header class="panel-header">
+          <div>
+            <h2 class="panel-title" id="activity-title">Google Agent Activity Logs</h2>
+            <div class="panel-subtitle">Received time, Google product, agent/tool, and sanitized event summary.</div>
+          </div>
+          <span class="product-badge cloud">Google Cloud</span>
+        </header>
+
+        <div class="activity-body">
+          <div class="log-source" id="logSourceStatus">
+            Waiting. Press `Start Watching Logs`.
+          </div>
+          <ol class="log-feed" id="logFeed"></ol>
+          <div class="empty-logs" id="emptyLogs">No logs loaded yet.</div>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <script>
+    const startButton = document.getElementById("startWatch");
+    const stopButton = document.getElementById("stopWatch");
+    const clearButton = document.getElementById("clearLogs");
+    const logSourceStatus = document.getElementById("logSourceStatus");
+    const clock = document.getElementById("demoClock");
+    const logFeed = document.getElementById("logFeed");
+    const emptyLogs = document.getElementById("emptyLogs");
+
+    let watchTimer = null;
+    let clockTimer = null;
+    let startTime = null;
+    let seenLogKeys = new Set();
+    let lastEntryCount = 0;
+
+    function formatElapsed(ms, includeTenths) {
+      const totalSeconds = Math.max(0, ms / 1000);
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = Math.floor(totalSeconds % 60);
+      if (includeTenths) {
+        const tenths = Math.floor((totalSeconds % 1) * 10);
+        return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}.${tenths}`;
+      }
+      return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }
+
+    function startClock() {
+      if (clockTimer) return;
+      startTime = Date.now();
+      clockTimer = window.setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        clock.textContent = formatElapsed(elapsed, true);
+      }, 100);
+    }
+
+    function stopClock() {
+      if (clockTimer) window.clearInterval(clockTimer);
+      clockTimer = null;
+    }
+
+    function sanitizeLogText(value) {
+      return String(value)
+        .replace(/[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}/gi, "[email]")
+        .replace(/\+?\d[\d\s().-]{7,}\d/g, "[phone]")
+        .replace(/(api[_-]?key|access[_-]?token|authorization|bearer|secret|password)["':=\s]+[^\s"',}]+/gi, "$1=[redacted]")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function humanizeKey(key) {
+      return String(key)
+        .replace(/[_-]+/g, " ")
+        .replace(/([a-z])([A-Z])/g, "$1 $2")
+        .replace(/\b\w/g, (letter) => letter.toUpperCase());
+    }
+
+    function compactValue(value) {
+      if (value === null || value === undefined || value === "") return "";
+      if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+        return sanitizeLogText(value);
+      }
+      if (Array.isArray(value)) {
+        return value.map(compactValue).filter(Boolean).slice(0, 4).join(", ");
+      }
+      if (typeof value === "object") {
+        const fields = ["name", "event", "status", "tool", "workflow", "route", "intent", "message", "summary", "description", "text"];
+        return fields.map((field) => compactValue(value[field])).find(Boolean) || "";
+      }
+      return sanitizeLogText(value);
+    }
+
+    function parseLogEntries(text) {
+      const trimmed = text.trim();
+      if (!trimmed) return [];
+      try {
+        const parsed = JSON.parse(trimmed);
+        if (Array.isArray(parsed)) return parsed;
+        if (Array.isArray(parsed.entries)) return parsed.entries;
+        if (Array.isArray(parsed.logs)) return parsed.logs;
+        if (Array.isArray(parsed.events)) return parsed.events;
+        if (Array.isArray(parsed.items)) return parsed.items;
+        return [parsed];
+      } catch (error) {
+        return trimmed.split(/\r?\n/).map((line) => line.trim()).filter(Boolean).map((line) => {
+          try { return JSON.parse(line); } catch (lineError) { return line; }
+        });
+      }
+    }
+
+    function entryMessage(entry) {
+      if (typeof entry === "string") return sanitizeLogText(entry);
+      if (!entry || typeof entry !== "object") return sanitizeLogText(String(entry));
+      const payload = entry.jsonPayload && typeof entry.jsonPayload === "object" ? entry.jsonPayload : {};
+      const primary = [
+        entry.message,
+        entry.textPayload,
+        entry.summary,
+        entry.description,
+        payload.message,
+        payload.summary,
+        payload.description,
+        payload.text
+      ].map(compactValue).find(Boolean);
+
+      const details = [];
+      ["event", "name", "agent", "component", "tool", "workflow", "route", "intent", "status", "model", "provider"].forEach((key) => {
+        const value = compactValue(entry[key] ?? payload[key]);
+        if (value) details.push(`${humanizeKey(key)}: ${value}`);
+      });
+
+      const parts = [];
+      if (primary) parts.push(primary);
+      if (details.length) parts.push(details.slice(0, 5).join(" | "));
+      if (!parts.length) parts.push("Log entry received");
+      return sanitizeLogText(parts.join(" — "));
+    }
+
+    function entryTimestamp(entry) {
+      if (entry && typeof entry === "object") {
+        return entry.timestamp || entry.receiveTimestamp || entry.time || entry.createdAt || new Date().toISOString();
+      }
+      return new Date().toISOString();
+    }
+
+    function entrySource(entry) {
+      if (!entry || typeof entry !== "object") return "log";
+      return entry.resource?.service_name || entry.resource?.labels?.service_name || entry.resource?.type || entry.severity || "log";
+    }
+
+    function entryProduct(entry) {
+      if (entry && typeof entry === "object" && entry.product) {
+        const product = String(entry.product).toLowerCase();
+        if (product.includes("maps")) return { label: "Google Maps", className: "maps" };
+        if (product.includes("adk")) return { label: "Google ADK", className: "adk" };
+        if (product.includes("gemini") || product.includes("vertex")) return { label: "Gemini", className: "gemini" };
+        if (product.includes("sofia")) return { label: "Sofia", className: "sofia" };
+      }
+      const text = `${entryMessage(entry)} ${entrySource(entry)}`.toLowerCase();
+      if (text.includes("adk")) return { label: "Google ADK", className: "adk" };
+      if (text.includes("maps") || text.includes("grounding") || text.includes("directions")) return { label: "Google Maps", className: "maps" };
+      if (text.includes("gemini") || text.includes("vertex")) return { label: "Gemini", className: "gemini" };
+      if (text.includes("sofia")) return { label: "Sofia", className: "sofia" };
+      return { label: "Cloud Run", className: "" };
+    }
+
+    function formatTimestamp(value) {
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return sanitizeLogText(value);
+      return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+    }
+
+    function entryKey(entry) {
+      if (entry && typeof entry === "object") {
+        return entry.insertId || `${entryTimestamp(entry)}:${entryMessage(entry)}`;
+      }
+      return String(entry);
+    }
+
+    function shouldShowEntry(entry) {
+      if (entry && typeof entry === "object" && ["Gemini", "Google ADK", "Google Maps"].includes(entry.product)) return true;
+      const text = `${entryMessage(entry)} ${entrySource(entry)}`.toLowerCase();
+      return !text.includes("infobip") && !text.includes("voice /") && !text.includes("voice.json") && !text.includes("media websocket");
+    }
+
+    function renderLog(entry, prepend = true) {
+      if (!shouldShowEntry(entry)) return false;
+      const key = entryKey(entry);
+      if (seenLogKeys.has(key)) return false;
+      seenLogKeys.add(key);
+
+      const item = document.createElement("li");
+      item.className = "log-item";
+
+      const meta = document.createElement("div");
+      meta.className = "log-meta";
+      const product = entryProduct(entry);
+      const chip = document.createElement("span");
+      chip.className = `log-chip ${product.className}`;
+      chip.textContent = product.label;
+      const time = document.createElement("span");
+      time.textContent = formatTimestamp(entryTimestamp(entry));
+      const source = document.createElement("span");
+      source.textContent = entrySource(entry);
+      meta.append(chip, time, source);
+
+      const message = document.createElement("div");
+      message.className = "log-message";
+      message.textContent = entryMessage(entry) || "[empty log message]";
+
+      item.append(meta, message);
+      if (prepend) logFeed.prepend(item);
+      else logFeed.append(item);
+
+      emptyLogs.style.display = "none";
+      lastEntryCount += 1;
+      return true;
+    }
+
+    function getDefaultLogsUrl() {
+      const explicit = new URLSearchParams(window.location.search).get("logsUrl");
+      if (explicit) return explicit;
+      if (window.location.protocol.startsWith("http")) return "/logs";
+      return "";
+    }
+
+    async function fetchAndRenderLogs() {
+      const logsUrl = getDefaultLogsUrl();
+      if (!logsUrl) {
+        logSourceStatus.textContent = "Start the log bridge, then watch logs.";
+        return;
+      }
+
+      try {
+        const response = await fetch(logsUrl, { cache: "no-store" });
+        if (!response.ok) throw new Error(`HTTP ${response.status}`);
+        const text = await response.text();
+        const entries = parseLogEntries(text);
+        let added = 0;
+        entries.reverse().forEach((entry) => {
+          if (renderLog(entry, true)) added += 1;
+        });
+        logSourceStatus.textContent = `${lastEntryCount} logs received · ${added} new this poll`;
+      } catch (error) {
+        logSourceStatus.textContent = `Could not read logs: ${sanitizeLogText(error.message)}`;
+      }
+    }
+
+    async function startWatching() {
+      if (watchTimer) return;
+      startButton.disabled = true;
+      stopButton.disabled = false;
+      startClock();
+      await fetchAndRenderLogs();
+      watchTimer = window.setInterval(fetchAndRenderLogs, 3500);
+    }
+
+    function stopWatching() {
+      if (watchTimer) window.clearInterval(watchTimer);
+      watchTimer = null;
+      startButton.disabled = false;
+      stopButton.disabled = true;
+      stopClock();
+      logSourceStatus.textContent = `Stopped · ${lastEntryCount} real log entries shown`;
+    }
+
+    function clearLogs() {
+      logFeed.innerHTML = "";
+      emptyLogs.style.display = "block";
+      emptyLogs.textContent = "No logs loaded yet.";
+      seenLogKeys = new Set();
+      lastEntryCount = 0;
+      clock.textContent = "00:00.0";
+      logSourceStatus.textContent = "Waiting. Press `Start Watching Logs`.";
+    }
+
+    function loadLogText(text, sourceLabel) {
+      stopWatching();
+      clearLogs();
+      const entries = parseLogEntries(text);
+      entries.forEach((entry) => renderLog(entry, false));
+      logSourceStatus.textContent = `${lastEntryCount} real log entries loaded from ${sourceLabel}`;
+    }
+
+    startButton.addEventListener("click", startWatching);
+    stopButton.addEventListener("click", stopWatching);
+    clearButton.addEventListener("click", clearLogs);
+    clearLogs();
+  </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+digraph SophiaAdkTools {
+  graph [label="Sophia Agents / ADK / MCP Tools", labelloc=t, fontsize=22, fontname="Inter, Arial, sans-serif", rankdir=LR, compound=true, splines=ortho, bgcolor="#ffffff"];
+  node [shape=box, style="rounded,filled", fontname="Inter, Arial, sans-serif", fontsize=10, color="#667085", fillcolor="#ffffff"];
+  edge [fontname="Inter, Arial, sans-serif", fontsize=9, color="#475467", arrowsize=0.7];
+
+  subgraph cluster_gemini {
+    label="Gemini Live domain setup";
+    color="#be123c"; fillcolor="#fff1f2"; style="rounded,filled";
+    GeminiSetup [label="proxy/services/voice/infobipMediaWebSocketGemini.ts"];
+    GeminiConfig [label="proxy/services/voice/geminiLive/config.ts"];
+    ReceptionistDeclarations [label="proxy/services/voice/geminiLive/tools/receptionistTools.ts"];
+  }
+
+  subgraph cluster_agents {
+    label="Domain agents";
+    color="#4f46e5"; fillcolor="#eef2ff"; style="rounded,filled";
+    DomainRegistry [label="proxy/sofia/agents/index.ts"];
+    IdentityAgent [label="proxy/sofia/agents/identity/agent.ts"];
+    AppointmentsAgent [label="proxy/sofia/agents/appointments/agent.ts"];
+    ProfileAgent [label="proxy/sofia/agents/profile/agent.ts"];
+    DocumentsAgent [label="proxy/sofia/agents/documents/agent.ts"];
+    SignaturesAgent [label="proxy/sofia/agents/signatures/agent.ts"];
+    TasksAgent [label="proxy/sofia/agents/tasks/agent.ts"];
+    HandoffAgent [label="proxy/sofia/agents/handoff/agent.ts"];
+    SofiaMcpTools [label="proxy/sofia/mcp/*/tools.ts"];
+  }
+
+  subgraph cluster_adk {
+    label="ADK orchestration";
+    color="#4f46e5"; fillcolor="#eef2ff"; style="rounded,filled";
+    SophiaAdk [label="proxy/sofia/adk/orchestrationService.ts"];
+    SophiaAdkTools [label="proxy/sofia/adk/tools.ts"];
+    SophiaAdkBridge [label="proxy/sofia/adk/toolBridge.ts"];
+    GoogleAdkFunctionTool [label="@google/adk FunctionTool"];
+    GoogleMapsGroundingTool [label="GoogleMapsGroundingTool\nproxy/sofia/adk/tools.ts"];
+  }
+
+  subgraph cluster_runtime_tools {
+    label="Runtime tool execution";
+    color="#be123c"; fillcolor="#fff1f2"; style="rounded,filled";
+    Dispatcher [label="proxy/services/voice/tools/dispatcher/registry.ts"];
+    Runner [label="proxy/services/voice/tools/dispatcher/toolRunner.ts"];
+    ReceptionistRegistry [label="proxy/services/voice/tools/dispatcher/receptionistRegistry.ts"];
+    SendSms [label="proxy/services/voice/tools/receptionist/sendSms.ts"];
+    NotificationHub [label="proxy/services/notifications/notificationHub.ts"];
+  }
+
+  subgraph cluster_external {
+    label="External tool integrations";
+    color="#9333ea"; fillcolor="#faf5ff"; style="rounded,filled";
+    GoogleMapsMcp [label="https://mapstools.googleapis.com/mcp"];
+    InfobipSms [label="Infobip SMS"];
+  }
+
+  GeminiSetup -> GeminiConfig;
+  GeminiSetup -> DomainRegistry;
+  GeminiConfig -> ReceptionistDeclarations;
+  DomainRegistry -> IdentityAgent -> SofiaMcpTools;
+  DomainRegistry -> AppointmentsAgent -> SofiaMcpTools;
+  DomainRegistry -> ProfileAgent -> SofiaMcpTools;
+  DomainRegistry -> DocumentsAgent -> SofiaMcpTools;
+  DomainRegistry -> SignaturesAgent -> SofiaMcpTools;
+  DomainRegistry -> TasksAgent -> SofiaMcpTools;
+  DomainRegistry -> HandoffAgent -> SofiaMcpTools;
+  SophiaAdk -> SophiaAdkTools -> GoogleAdkFunctionTool;
+  SophiaAdkTools -> GoogleMapsGroundingTool -> GoogleMapsMcp;
+  Dispatcher -> Runner -> SophiaAdkBridge;
+  Dispatcher -> ReceptionistRegistry -> SendSms;
+  ReceptionistDeclarations -> SendSms;
+  SendSms -> NotificationHub -> InfobipSms;
+}
